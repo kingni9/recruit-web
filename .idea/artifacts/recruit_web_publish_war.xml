@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="recruit-web-publish:war">
-    <output-path>$PROJECT_DIR$/recruit-web-publish/target</output-path>
-    <root id="archive" name="recruit-web-publish.war">
-      <element id="artifact" artifact-name="recruit-web-publish:war exploded" />
-    </root>
-  </artifact>
-</component>
