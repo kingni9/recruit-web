@@ -12,14 +12,12 @@
     
     <mvc:annotation-driven />
 
-<!--
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/recruit/request0.do" />
-            <bean class="com.recruit.interceptor.LoginInterceptor" />
+            <mvc:mapping path="/**/*.do" />
+            <bean class="com.recruit.interceptor.LoginValidateInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
--->
 
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

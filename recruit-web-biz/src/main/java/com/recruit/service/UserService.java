@@ -15,6 +15,14 @@ public interface UserService {
     User queryByUserAccount(String userAccount);
 
     /**
+     * 根据客户端密码及查询出的用户信息校验密码一致性
+     * @param user
+     * @param psw
+     * @return
+     */
+    ResultDTO<Boolean> validateUserPsw(User user, String psw);
+
+    /**
      * 新增用户信息
      * @param user
      * @return

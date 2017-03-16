@@ -23,16 +23,36 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    private static final String DEFAULT_SALT = "1234";
-
     @Override
     public User queryByUserAccount(String userAccount) {
         if(StringUtils.isBlank(userAccount)) {
-            log.info("illegal arguments for queryByUserAccount::userAccount is empty!");
+            log.info("illegal arguments for queryByUserAccount!");
             return null;
         }
 
         return userMapper.queryByUserAccount(userAccount);
+    }
+
+    @Override
+    public ResultDTO<Boolean> validateUserPsw(User user, String psw) {
+        if(user == null || StringUtils.isBlank(user.getSalt()) || StringUtils.isBlank(user.getPassword()) || StringUtils.isBlank(psw)) {
+            log.info("illegal arguments for validateUserPsw!");
+            return ResultDTO.failed("illegal arguments");
+        }
+
+        boolean result = false;
+
+        try {
+            String hexPsw = EncryptUtil.getEncryptedStr(psw, user.getSalt());
+            if(user.getPassword().trim().equalsIgnoreCase(hexPsw)) {
+                result = true;
+            }
+        } catch (Exception e) {
+            log.error("failed to validateUserPsw", e);
+            return ResultDTO.failed("exception");
+        }
+
+        return ResultDTO.succeed(result);
     }
 
     @Override
@@ -42,8 +62,11 @@ public class UserServiceImpl implements UserService {
             return ResultDTO.failed("illegal arguments!");
         }
 
+        if(!this.encryptUserInfo(user)) {
+            throw new RuntimeException("failed to encryptUserInfo!");
+        }
+
         try {
-            this.encryptUserInfo(user);
             userMapper.insert(user);
         } catch (Exception e) {
             log.info("failed to insert user", e);
@@ -60,20 +83,17 @@ public class UserServiceImpl implements UserService {
                 && user.getRoleId() != null;
     }
 
-    private void encryptUserInfo(User user) {
+    private Boolean encryptUserInfo(User user) {
         try {
             String salt = RandomKeyGenerateUtil.getRandomStrKey(4);
-
-            if(StringUtils.isEmpty(salt)) {
-                salt = DEFAULT_SALT;
-            }
 
             user.setSalt(salt);
             user.setPassword(EncryptUtil.getEncryptedStr(user.getPassword(), salt));
         } catch (Exception e) {
             log.error("failed to encryptUserInfo", e);
-            user.setSalt(StringUtils.EMPTY);    // 盐为空认定密码加密异常，登录时进行异常兼容
-            return;
+            return Boolean.FALSE;
         }
+
+        return Boolean.TRUE;
     }
 }
