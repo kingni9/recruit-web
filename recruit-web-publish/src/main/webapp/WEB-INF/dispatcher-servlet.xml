@@ -8,9 +8,18 @@
            http://www.springframework.org/schema/context/spring-context-4.2.xsd
            http://www.springframework.org/schema/mvc
            http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
-    <context:component-scan base-package="com.recruit" />
+    <context:component-scan base-package="com.recruit.controller" />
     
     <mvc:annotation-driven />
+
+<!--
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/recruit/request0.do" />
+            <bean class="com.recruit.interceptor.LoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+-->
 
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

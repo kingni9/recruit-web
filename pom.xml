@@ -42,6 +42,17 @@
                 <artifactId>fastjson</artifactId>
                 <version>1.2.8</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.4.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.4.3</version>
+            </dependency>
+
 
             <!-- spring -->
             <dependency>
@@ -197,7 +208,7 @@
                                 <port>8088</port>
                             </connector>
                         </connectors>
-                        <contextPath>/recruit-web</contextPath>
+                        <contextPath>/</contextPath>
                         <scanIntervalSeconds>0</scanIntervalSeconds>
                     </configuration>
                 </plugin>
@@ -207,7 +218,7 @@
                     <version>2.1</version>
                     <configuration>
                         <port>8088</port>
-                        <path>/recruit-web</path>
+                        <path>/</path>
                         <uriEncoding>UTF-8</uriEncoding>
                         <server>tomcat7</server>
                     </configuration>
