@@ -1,6 +1,6 @@
 package com.recruit.interceptor;
 
-import com.recruit.base.UserManager;
+import com.recruit.base.SessionManager;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,13 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginValidateInterceptor implements HandlerInterceptor {
     private static final String LOGIN_URL_KEY = "login";
 
+    private static final String REGISTER_URK_KEY = "register";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getRequestURI().contains(LOGIN_URL_KEY)) {
+        if(request.getRequestURI().contains(LOGIN_URL_KEY) || request.getRequestURI().contains(REGISTER_URK_KEY)) {
             return true;
         }
 
-        return UserManager.getUserInfo(request.getSession()) != null;
+        return SessionManager.getUserInfo(request.getSession()) != null;
     }
 
     @Override

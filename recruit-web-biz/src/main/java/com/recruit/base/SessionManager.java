@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by zhuangjt on 2017-03-15.
  */
-public class UserManager {
+public class SessionManager {
 
     private static final String USER_NAME_KEY = "userInfo";
 
@@ -23,5 +23,11 @@ public class UserManager {
         }
 
         return null;
+    }
+
+    public static void removeUserInfo(HttpSession session) {
+        if(getUserInfo(session) != null) {
+            session.removeAttribute(USER_NAME_KEY);
+        }
     }
 }
