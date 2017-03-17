@@ -79,7 +79,53 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.insert(user);
         } catch (Exception e) {
-            log.info("failed to insert user", e);
+            log.error("failed to insert user", e);
+            throw e;
+        }
+
+        return ResultDTO.succeed(Boolean.TRUE);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public ResultDTO<Boolean> validateOrIncreaseLockPortQty(User user) {
+        if(!this.validateIfIllegal(user) || user.getAllotPortQty() == null || user.getAllotPortQty() == null) {
+            return ResultDTO.failed("illegal arguments!");
+        }
+
+        try {
+            if(user.getAllotPortQty() < user.getLockPortQty()) {
+                userMapper.updateLockPortQty(user.getAllotPortQty(), user.getId());
+                return ResultDTO.succeed(Boolean.FALSE);
+            } else if(user.getAllotPortQty() > user.getLockPortQty()) {
+                userMapper.updateLockPortQty((user.getLockPortQty() + 1), user.getId());
+                return ResultDTO.succeed(Boolean.TRUE);
+            } else {
+                return ResultDTO.succeed(Boolean.FALSE);
+            }
+        } catch (Exception e) {
+            log.error("failed to validateOrUpdatePortQty", e);
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public ResultDTO<Boolean> decreaseLockPortQty(User user) {
+        if(!this.validateIfIllegal(user) || user.getAllotPortQty() == null || user.getAllotPortQty() == null) {
+            return ResultDTO.failed("illegal arguments!");
+        }
+
+        try {
+            if(user.getAllotPortQty() < user.getLockPortQty()) {
+                userMapper.updateLockPortQty(user.getAllotPortQty() - 1, user.getId());
+            } else if(user.getLockPortQty() <= 1) {
+                userMapper.updateLockPortQty(0, user.getId());
+            } else {
+                userMapper.updateLockPortQty(user.getLockPortQty() - 1, user.getId());
+            }
+        } catch (Exception e) {
+            log.error("failed to validateOrUpdatePortQty", e);
             throw e;
         }
 

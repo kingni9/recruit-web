@@ -50,6 +50,16 @@ public class User implements Serializable {
     private Integer roleId;
 
     /**
+     * 锁定登陆端口数
+     */
+    private Integer lockPortQty;
+
+    /**
+     * 分配登录端口数
+     */
+    private Integer allotPortQty;
+
+    /**
      * 创建时间
      */
     private Date createdTime;

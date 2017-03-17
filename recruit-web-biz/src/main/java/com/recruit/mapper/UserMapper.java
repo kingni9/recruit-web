@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,4 +20,7 @@ public interface UserMapper {
             "values(NULL, #{user.userAccount}, #{user.password}, #{user.userName}, #{user.salt}, #{user.roleId}) "})
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "user.id")
     int insert(@Param("user") User user);
+
+    @Update({"update t_user set lockPortQty = #{lockPortQty} where id = #{id} "})
+    int updateLockPortQty(@Param("lockPortQty") Integer lockPortQty, @Param("id") Integer id);
 }

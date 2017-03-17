@@ -39,13 +39,28 @@ public class UserManageController {
             return ResultDTO.failed("用户名或密码错误");
         }
 
-        ResultDTO<Boolean> resultDTO = userService.validateUserPsw(user, requestVo.getPassword());
-        if(!resultDTO.isSuccess()) {
+        ResultDTO<Boolean> validateUserPswResultDTO = userService.validateUserPsw(user, requestVo.getPassword());
+
+        if(!validateUserPswResultDTO.isSuccess()) {
             return ResultDTO.failed("登录失败");
         }
 
-        if(!resultDTO.getModel()) {
+        if(!validateUserPswResultDTO.getModel()) {
             return ResultDTO.failed("用户名或密码错误");
+        }
+
+        try {
+            ResultDTO<Boolean> validatePortQtyResultDTO = userService.validateOrIncreaseLockPortQty(user);
+            if(!validatePortQtyResultDTO.isSuccess()) {
+                return ResultDTO.failed("登录失败");
+            }
+
+            if(!validatePortQtyResultDTO.getModel()) {
+                return ResultDTO.failed("用户登陆端口数量已满");
+            }
+        } catch (Exception e) {
+            log.info("failed to login", e);
+            return ResultDTO.failed("登录失败");
         }
 
         SessionManager.setUserInfo(request.getSession(), user);
@@ -61,9 +76,20 @@ public class UserManageController {
     @RequestMapping("logout")
     @ResponseBody
     public ResultDTO<Boolean> logout(HttpServletRequest request) {
-        SessionManager.removeUserInfo(request.getSession());
+        User user = SessionManager.getUserInfo(request.getSession());
 
-        return ResultDTO.succeed(Boolean.TRUE);
+        if(user != null) {
+            try {
+                userService.decreaseLockPortQty(user);
+                SessionManager.removeUserInfo(request.getSession());
+
+                return ResultDTO.succeed(Boolean.TRUE);
+            } catch (Exception e) {
+                log.error("failed to logout", e);
+            }
+        }
+
+        return ResultDTO.failed("用户注销失败");
     }
 
     @RequestMapping("register")

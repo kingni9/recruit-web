@@ -28,4 +28,18 @@ public interface UserService {
      * @return
      */
     ResultDTO<Boolean> insert(User user);
+
+    /**
+     * 校验或自增用户登录端口数量
+     * @param user
+     * @return
+     */
+    ResultDTO<Boolean> validateOrIncreaseLockPortQty(User user);
+
+    /**
+     * 自减用户登录端口数量
+     * @param user
+     * @return
+     */
+    ResultDTO<Boolean> decreaseLockPortQty(User user);
 }
