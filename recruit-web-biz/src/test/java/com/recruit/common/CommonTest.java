@@ -8,6 +8,7 @@ import com.recruit.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -45,5 +46,12 @@ public class CommonTest extends BaseTest {
         userService.insert(user);
 
         log.info(JSON.toJSONString(user, true));
+    }
+
+    @Test
+    public void m2() {
+        User user = User.builder().id(2).build();
+
+        userMapper.update(user);
     }
 }

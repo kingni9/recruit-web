@@ -1,5 +1,7 @@
 package com.recruit.base;
 
+import java.util.List;
+
 public class BaseQuery<T> {
 	/** 缺省页大小 */
 	public static final int DEFAULT_PAGE_SIZE = 20;
@@ -25,15 +27,7 @@ public class BaseQuery<T> {
 	/**
 	 * 数据主题
 	 */
-	private T model;
-
-	public T getModel() {
-		return model;
-	}
-
-	public void setModel(T model) {
-		this.model = model;
-	}
+	private List<T> model;
 
 	public int getPageSize() {
 		if (pageSize < 1) {
@@ -131,5 +125,13 @@ public class BaseQuery<T> {
 	 */
 	public int getTotalPage() {
 		return totalPage;
+	}
+
+	public List<T> getModel() {
+		return model;
+	}
+
+	public void setModel(List<T> model) {
+		this.model = model;
 	}
 }

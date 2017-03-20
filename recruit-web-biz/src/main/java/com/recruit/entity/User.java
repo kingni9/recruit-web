@@ -60,16 +60,6 @@ public class User implements Serializable {
     private Integer allotPortQty;
 
     /**
-     * 是否激活
-     */
-    private Boolean isActive;
-
-    /**
-     * 激活码
-     */
-    private String activeCode;
-
-    /**
      * 创建时间
      */
     private Date createdTime;

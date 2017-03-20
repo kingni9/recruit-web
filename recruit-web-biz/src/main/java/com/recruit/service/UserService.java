@@ -2,11 +2,34 @@ package com.recruit.service;
 
 import com.recruit.base.ResultDTO;
 import com.recruit.entity.User;
+import com.recruit.vo.request.UserPageRequestVo;
 
 /**
  * Created by zhuangjt on 2017/3/16.
  */
 public interface UserService {
+
+    /**
+     * 用户信息分页查询
+     * @param requestVo
+     * @return
+     */
+    ResultDTO<UserPageRequestVo> queryPage(UserPageRequestVo requestVo);
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    ResultDTO<Integer> update(User user);
+
+    /**
+     * 更新用户信息
+     * @param id
+     * @return
+     */
+    ResultDTO<Integer> delete(Integer id);
+
     /**
      * 根据用户账号查询用户信息
      * @param userAccount

@@ -5,10 +5,11 @@ import com.recruit.entity.User;
 import com.recruit.mapper.UserMapper;
 import com.recruit.service.UserService;
 import com.recruit.utils.EncryptUtil;
-import com.recruit.utils.MailUtil;
 import com.recruit.utils.RandomKeyGenerateUtil;
-import com.recruit.vo.MailSendVo;
+import com.recruit.vo.request.UserPageRequestVo;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.PasswordAuthentication;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.util.List;
 
 /**
  * Created by zhuangjt on 2017/3/16.
@@ -35,6 +28,60 @@ import java.io.Writer;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+    public ResultDTO<UserPageRequestVo> queryPage(UserPageRequestVo requestVo) {
+        if(requestVo == null) {
+            return ResultDTO.succeed(UserPageRequestVo.builder().build());
+        }
+
+        List<User> users = userMapper.queryAutoPage(requestVo);
+
+        if(CollectionUtils.isNotEmpty(users)) {
+            requestVo.setModel(users);
+        }
+
+        return ResultDTO.succeed(requestVo);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public ResultDTO<Integer> update(User user) {
+        if(user == null || user.getId() == null) {
+            log.info("illegal arguments for update!");
+            return ResultDTO.failed("illegal arguments");
+        }
+
+        int result = 0;
+
+        try {
+            result = userMapper.update(user);
+        } catch (Exception e) {
+            log.error("failed to update user record", e);
+            throw e;
+        }
+
+        return ResultDTO.succeed(result);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+    public ResultDTO<Integer> delete(Integer id) {
+        if(id == null || id <= 0) {
+            log.info("illegal arguments for update!");
+            return ResultDTO.failed("illegal arguments");
+        }
+
+        int result = 0;
+
+        try {
+            result = userMapper.delete(id);
+        } catch (Exception e) {
+            log.error("failed to delete user record", e);
+            throw e;
+        }
+
+        return ResultDTO.succeed(result);
+    }
 
     @Override
     public User queryByUserAccount(String userAccount) {
@@ -80,7 +127,6 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            user.setActiveCode(RandomKeyGenerateUtil.getRandomStrKey(6));
             userMapper.insert(user);
         } catch (Exception e) {
             log.error("failed to insert user", e);

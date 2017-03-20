@@ -5,6 +5,7 @@ import com.recruit.base.SessionManager;
 import com.recruit.entity.User;
 import com.recruit.service.UserService;
 import com.recruit.vo.request.UserLoginRequestVo;
+import com.recruit.vo.request.UserPageRequestVo;
 import com.recruit.vo.request.UserRegisterRequestVo;
 import com.recruit.vo.result.UserLoginResultVo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,53 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @Controller
-@RequestMapping("recruit")
+@RequestMapping("recruit/user")
 public class UserManageController {
     @Autowired
     private UserService userService;
+
+    @RequestMapping("queryPage")
+    @ResponseBody
+    public ResultDTO<UserPageRequestVo> queryPage(@RequestBody UserPageRequestVo requestVo) {
+        if(requestVo == null) {
+            requestVo = requestVo.builder().build();
+        }
+
+        return userService.queryPage(requestVo);
+    }
+
+    @RequestMapping("update")
+    @ResponseBody
+    public ResultDTO<Integer> update(@RequestBody User user) {
+        if(!this.validateIfIllegal(user)) {
+            return ResultDTO.failed("用户信息不合法!");
+        }
+
+        try {
+            return userService.update(user);
+        } catch (Exception e) {
+            log.error("failed to update user record", e);
+        }
+
+        return ResultDTO.failed("用户信息修改失败!");
+    }
+
+    @RequestMapping("update")
+    @ResponseBody
+    public ResultDTO<Integer> delete(Integer id) {
+        if(id == null || id <= 0) {
+            return ResultDTO.failed("用户ID不合法!");
+        }
+
+        try {
+            return userService.delete(id);
+        } catch (Exception e) {
+            log.error("failed to update user record", e);
+        }
+
+        return ResultDTO.failed("用户信息删除失败!");
+    }
+
 
     @RequestMapping("login")
     @ResponseBody
@@ -120,5 +164,12 @@ public class UserManageController {
         }
 
         return ResultDTO.failed("用户注册失败");
+    }
+
+    private Boolean validateIfIllegal(User user) {
+        return user != null
+                && StringUtils.isNoneBlank(user.getUserAccount())
+                && user.getId() != null
+                && user.getId() > 0;
     }
 }
