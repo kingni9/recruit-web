@@ -99,14 +99,19 @@ public class UserManageController {
             return ResultDTO.failed("注册信息不合法");
         }
 
-        User user = User.builder()
+        User user = userService.queryByUserAccount(requestVo.getUserAccount());
+        if(user == null) {
+            return ResultDTO.failed("当前邮箱用户已存在!");
+        }
+
+        User newUser = User.builder()
                 .userAccount(requestVo.getUserAccount())
                 .userName(requestVo.getUserAccount())
                 .password(requestVo.getPassword())
                 .roleId(requestVo.getRoleId()).build();
 
         try {
-            ResultDTO<Boolean> resultDTO = userService.insert(user);
+            ResultDTO<Boolean> resultDTO = userService.insert(newUser);     // TODO：邮箱激活校验
             if(resultDTO.isSuccess() && resultDTO.getModel()) {
                 return ResultDTO.succeed(Boolean.TRUE);
             }

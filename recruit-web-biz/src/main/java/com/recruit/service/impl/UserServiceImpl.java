@@ -5,7 +5,9 @@ import com.recruit.entity.User;
 import com.recruit.mapper.UserMapper;
 import com.recruit.service.UserService;
 import com.recruit.utils.EncryptUtil;
+import com.recruit.utils.MailUtil;
 import com.recruit.utils.RandomKeyGenerateUtil;
+import com.recruit.vo.MailSendVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.PasswordAuthentication;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,6 +80,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
+            user.setActiveCode(RandomKeyGenerateUtil.getRandomStrKey(6));
             userMapper.insert(user);
         } catch (Exception e) {
             log.error("failed to insert user", e);

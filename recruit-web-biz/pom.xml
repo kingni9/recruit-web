@@ -113,10 +113,17 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
         </dependency>
+
+        <!-- Java mail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>recruit-web-biz</finalName>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
