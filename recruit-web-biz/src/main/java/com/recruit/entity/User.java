@@ -1,5 +1,6 @@
 package com.recruit.entity;
 
+import com.recruit.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,13 +17,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements Serializable {
+public class User extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -9219995870741230121L;
-
-    /**
-     * 用户Id
-     */
-    private Integer id;
 
     /**
      * 用户名称
@@ -58,14 +54,4 @@ public class User implements Serializable {
      * 分配登录端口数
      */
     private Integer allotPortQty;
-
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updatedTime;
 }
