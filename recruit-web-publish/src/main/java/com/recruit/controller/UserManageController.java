@@ -54,7 +54,7 @@ public class UserManageController {
         return ResultDTO.failed("用户信息修改失败!");
     }
 
-    @RequestMapping("update")
+    @RequestMapping("delete")
     @ResponseBody
     public ResultDTO<Integer> delete(Integer id) {
         if(id == null || id <= 0) {

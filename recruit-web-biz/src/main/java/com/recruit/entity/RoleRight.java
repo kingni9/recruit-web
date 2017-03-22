@@ -1,12 +1,12 @@
 package com.recruit.entity;
 
-import com.recruit.base.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by zhuangjt on 2017/3/20.
@@ -15,8 +15,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoleRight extends BaseEntity implements Serializable {
+public class RoleRight implements Serializable {
     private static final long serialVersionUID = 4842108202995714895L;
+
+    /**
+     * Id
+     */
+    private Integer id;
 
     /**
      * 角色Id
@@ -37,4 +42,14 @@ public class RoleRight extends BaseEntity implements Serializable {
      * 权限URL
      */
     private String rightUrl;
+
+    /**
+     * 创建时间
+     */
+    private Date createdTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updatedTime;
 }
